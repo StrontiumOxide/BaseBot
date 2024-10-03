@@ -6,9 +6,9 @@ from aiogram.enums import ParseMode
 from utils.loader_token import Token
 
 from main_logic_bot.main import main_polling
-from spam.main import spamming
+from periodic_app.main import planned_machine
 
-logging.basicConfig(level=logging.INFO, filename='bot_log.log', filemode='a', encoding='utf-8')
+logging.basicConfig(level=logging.ERROR, filename='bot_log.log', filemode='a', encoding='utf-8')
 
 
 async def main():
@@ -17,16 +17,19 @@ async def main():
     bot = Bot(token=Token(key='TELEGRAM').find(), parse_mode=ParseMode.HTML)
     dp = Dispatcher()
 
-        # Уведомление о запуске Telegram-бота
-    await bot.send_message(
-        chat_id=Token(key='MY_ID').find(),
-        text='<b>[INFO] Telegram-бот запущен!</b>'
-    )
+    try:
+            # Уведомление о запуске Telegram-бота
+        await bot.send_message(
+            chat_id=Token(key='MY_ID').find(),
+            text='<b>[INFO] Telegram-бот запущен!</b>'
+        )
+    except Exception:
+        print('[INFO] Telegram-бот запущен!')
 
         # Сбор всех корутин
     await asyncio.gather(
         main_polling(bot=bot, dp=dp),
-        spamming(bot=bot)
+        planned_machine()
     )
 
 

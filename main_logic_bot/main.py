@@ -9,7 +9,7 @@ async def main_polling(bot: Bot, dp: Dispatcher) -> None:
     """Функция, отвечающая за polling"""
 
         # Подключение Middleware
-    dp.update.middleware(CountMiddleware())
+    dp.update.outer_middleware(CountMiddleware())
 
         # Список с модулями Telegram-бота
     list_modules = [
@@ -26,5 +26,8 @@ async def main_polling(bot: Bot, dp: Dispatcher) -> None:
         # Подключение командного меню
     await set_commands(bot=bot)
 
+        # Удаление webhook
+    await bot.delete_webhook(drop_pending_updates=True)
+    
         # Polling
     await dp.start_polling(bot, polling_timeout=20)
